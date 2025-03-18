@@ -1,3 +1,4 @@
+/*
 import { ManageRequestBody } from "@middlewares/manageRequest";
 import stringService from "@utils/services/stringServices";
 import objectService from "@utils/services/objectServices";
@@ -246,3 +247,4 @@ const classesResource = {
 };
 
 export default classesResource;
+*/
