@@ -64,7 +64,7 @@ const ticketResource = {
             if (!ticket) return manageError({ code: "ticket_not_found" });
 
             if (userID !== String(ticket.userID) && ticket.scope === "space"){
-                const userSpace = user.spaces?.find(x => x.id == String(ticket.spaceID));
+                //const userSpace = user.spaces?.find(x => x.id == String(ticket.spaceID));
                 //const hasPermisson = await hasRolePermission(userSpace?.role.toString() || "", ["administrator", "manage_tickets", "owner"]);
                 //if (!hasPermisson) return manageError({ code: "no_execution_permission" });
             };
@@ -88,7 +88,7 @@ const ticketResource = {
             const user = await hasUser({ _id: userID }, manageError);
             if (!user) return;
 
-            const userSpace = user.spaces?.find(x => x.id == spaceID);
+            //const userSpace = user.spaces?.find(x => x.id == spaceID);
             //const hasPermisson = await hasRolePermission(userSpace?.role.toString() || "", ["administrator", "manage_tickets", "owner"]);
             //if (!hasPermisson) return manageError({ code: "no_execution_permission" });
 
@@ -130,7 +130,7 @@ const ticketResource = {
             content = stringService.filterBadwords(content || "");
 
             if (userID !== String(ticket.userID) && ticket.scope === "space"){
-                const userSpace = user.spaces?.find(x => x.id == spaceID);
+                //const userSpace = user.spaces?.find(x => x.id == spaceID);
                 //const hasPermisson = await hasRolePermission(userSpace?.role.toString() || "", ["administrator", "manage_tickets", "owner"]);
                 //if (!hasPermisson) return manageError({ code: "no_execution_permission" });
             };
