@@ -1,0 +1,12 @@
+{
+  "exec": "tsx -r tsconfig-paths/register src/server.ts",
+  "watch": ["src", "package.json", ".env", "tsconfig.json"],
+  "restartable": "rs",
+  "quiet": true,
+  "ext": "ts",
+  "stdin": true,
+  "events": {
+    "restart": "node -e \"console.log('\\x1b[32m[nodemon]\\x1b[0m \\x1b[32mReloading due to changes...\\x1b[0m')\"",
+    "quit": "node -e \"console.log('\\x1b[31m[nodemon]\\x1b[0m \\x1b[31mShutting down...\\x1b[0m')\""
+  }
+}
