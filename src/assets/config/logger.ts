@@ -1,6 +1,6 @@
 const loggerConfig = {
     usePrefix: true,
-    prefix: '[DM API]',
+    prefix: '[DM SCOUTS API]',
     prefixColor: 'magenta',
     info: {
         prefix: '(info)',

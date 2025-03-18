@@ -1,7 +1,7 @@
 {
-  "name": "dm-api",
+  "name": "dm-scouts-api",
   "version": "1.0.0",
-  "description": "API responsavel por gerir dados de atividades do Distrito Metropolitano",
+  "description": "API responsavel por gerir dados de atividades escoteiras do Distrito Metropolitano",
   "main": "src/server.ts",
   "scripts": {
     "control-access": "tsx -r tsconfig-paths/register src/utils/functions/controlAccess.ts",
