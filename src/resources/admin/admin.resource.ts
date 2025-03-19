@@ -10,7 +10,7 @@ import userModel from "@database/model/user";
 const adminResource = {
     createUser: async ({ data, manageError }: ManageRequestBody) => {
         try {
-            let { id, name, group } = data;
+            let { id, name, group, role } = data;
             if (!id || !name) return manageError({ code: "invalid_data" });
 
             id = stringService.removeSpacesAndLowerCase(id);
@@ -19,11 +19,13 @@ const adminResource = {
             const userExists = await hasExistsUser({ id }, manageError);
             if (!userExists) return;
 
+            if (role == "admin") role = "normal";
+
             const extra: Partial<UserModelType> = {
                 lastUpdate: new Date(Date.now()),
             };
             
-            const createdUser = new userModel({ id, name, ...extra });
+            const createdUser = new userModel({ id, name, group, ...extra });
             await createdUser.save();
 
             return createdUser;
@@ -39,7 +41,9 @@ const adminResource = {
             const userExists = await hasUser({ _id: userID }, manageError);
             if (!userExists) return;
 
-            const filteredUser = objectService.filterObject(data, ["id", "order", "role", "createAt", "password", "_id"]);
+            const filteredUser = objectService.filterObject(data, ["id", "order", "createAt", "password", "_id"]);
+            
+            if (filteredUser.role == "admin") filteredUser.role = "normal";
 
             if (filteredUser.name){
                 filteredUser.name = stringService.normalizeString(filteredUser.name);
