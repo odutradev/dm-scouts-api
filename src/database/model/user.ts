@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     order: Number,
     name: String,
     role: {
-        enum: ["normal", "admin"],
+        enum: ["normal", "admin", "leadership"],
         default: "normal",
         type: String,
     },
@@ -24,43 +24,17 @@ const userSchema = new mongoose.Schema({
     lastUpdate: {
         type: Date,
     },
+    group: {
+        type: String
+    },
     firstSignup: {
         type: Date,
     },
     lastGetUser: {
         type: Date,
     },
-    spaces: [{
-        _id: false,
-        entryAt: Date,
-        role: {
-            type: mongoose.Schema.Types.ObjectId,
-        },
-        name: String,
-        id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "space"
-        } 
-    }],
-    classes: [{
-        _id: false,
-        entryAt: Date,
-        name: String,
-        id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "class"
-        } 
-    }],
     description: {
         type: String
-    },
-    images: {
-        profile: String
-    },
-    badges: [],
-    coins: {
-        type: Number,
-        default: 0
     },
     password: {
         type: String
@@ -68,20 +42,6 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String
     },
-    keys: {
-        slots: {
-            type: Number,
-            default: 1
-        },
-        specialSlots: {
-            type: Number,
-            default: 0
-        },
-        favoriteSlots: {
-            type: Number,
-            default: 3
-        }
-    }
 });
 
 const userModel = mongoose.model("user", userSchema);
