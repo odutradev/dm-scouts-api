@@ -46,11 +46,16 @@ export type ResponseErrorsParams =
   | "invalid_data" 
   | "no_data_sent" 
   | "no_token"
+  | "user_has_not_been_registered"
 
 export const ResponseErrors: Record<ResponseErrorsParams, ResponseError> = {
   system_role_modification_forbidden: {
     message: "Not allowed to modify or delete system-created roles",
     statusCode: 403,
+  },
+  user_has_not_been_registered: {
+    message: "User has not been registered",
+    statusCode: 401,
   },
   no_execution_permission: {
     message: "Permission denied for execution",

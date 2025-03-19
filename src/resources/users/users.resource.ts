@@ -45,7 +45,7 @@ const usersResource = {
             const findUser = await userModel.findOne({ id });
             if (!findUser) return manageError({ code: "user_not_found" });
             
-            if (findUser.status !== "loggedIn") return manageError({ code: "user_already_registered" });
+            if (findUser.status !== "loggedIn") return manageError({ code: "user_has_not_been_registered" });
 
             var isPasswordMatch = await bcrypt.compare(password, findUser?.password || "");
             if (!isPasswordMatch) return manageError({ code: "invalid_credentials" });
