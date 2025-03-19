@@ -1,3 +1,5 @@
+import bcrypt from "bcrypt";
+
 import { hasUser, hasExistsUser } from "@database/functions/user";
 import { ManageRequestBody } from "@middlewares/manageRequest";
 import stringService from "@utils/services/stringServices";
@@ -8,7 +10,7 @@ import userModel from "@database/model/user";
 const adminResource = {
     createUser: async ({ data, manageError }: ManageRequestBody) => {
         try {
-            let { id, name, space } = data;
+            let { id, name, group } = data;
             if (!id || !name) return manageError({ code: "invalid_data" });
 
             id = stringService.removeSpacesAndLowerCase(id);
@@ -48,6 +50,25 @@ const adminResource = {
             };
 
             return await userModel.findByIdAndUpdate(userID, { $set:{ ...filteredUser, lastUpdate: Date.now() } }, { new: true }).select("-password");
+        } catch (error) {
+            manageError({ code: "internal_error", error });
+        }
+    },
+    updateUserPassword: async ({ data, manageError, params }: ManageRequestBody) => {
+        try {
+            const { userID } =  params;
+            if (!userID) return manageError({ code: "invalid_params" });
+
+            const userExists = await hasUser({ _id: userID }, manageError);
+            if (!userExists) return;
+
+            let { password } = data;
+            if (!password) return manageError({ code: "invalid_data" });
+
+            const salt = await bcrypt.genSalt(10);
+            password = await bcrypt.hash(password, salt);
+
+            return await userModel.findByIdAndUpdate(userID, { $set:{ password, lastUpdate: Date.now() } }, { new: true }).select("-password");
         } catch (error) {
             manageError({ code: "internal_error", error });
         }
