@@ -11,9 +11,8 @@ export interface TicketModelType {
     status: "pending" | "answered" | "progress" | "completed"; 
     type: "suggestion" | "report" | "feedback" | "other";
     messages: TicketMessageType[];
-    scope: "space" | "system";
-    spaceID?: Types.ObjectId;
-    userID: Types.ObjectId;
+    scope: "system";
+    userID?: Types.ObjectId;
     attachments: string[];
     description?: string;
     displayName: boolean;
