@@ -1,6 +1,5 @@
 import { TicketModelType } from "@utils/types/models/ticket";
 import { ManageRequestBody } from "@middlewares/manageRequest";
-//import { hasRolePermission } from "@database/functions/space";
 import stringService from "@utils/services/stringServices";
 import { hasUser } from "@database/functions/user";
 import ticketModel from "@database/model/ticket";
