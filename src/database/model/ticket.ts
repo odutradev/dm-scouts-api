@@ -25,7 +25,7 @@ const ticketSchema = new mongoose.Schema({
     },
     scope: {
         type: String,
-        enum: ["space", "system"],     
+        enum: ["system"],     
     },
     displayName: {
         type: Boolean,
@@ -33,12 +33,7 @@ const ticketSchema = new mongoose.Schema({
     },
     userID: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: "user"
-    },
-    spaceID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "space"
     },
     messages: {
         type: [{

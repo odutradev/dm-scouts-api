@@ -14,7 +14,7 @@ const ticketResource = {
             const user = await hasUser({ _id: userID }, manageError);
             if (!user) return;
 
-            let { title, description, type, scope, attachments, displayName, spaceID }: Partial<TicketModelType> = data;
+            let { title, description, type, scope, attachments, displayName }: Partial<TicketModelType> = data;
             if (!title || !description || !type || !scope) return manageError({ code: "invalid_data" });
 
             description = stringService.filterBadwords(description);
@@ -25,7 +25,6 @@ const ticketResource = {
                 displayName,
                 attachments,
                 description,
-                spaceID,
                 userID,
                 scope,
                 title,
@@ -63,36 +62,11 @@ const ticketResource = {
             const ticket = await ticketModel.findById(ticketID);
             if (!ticket) return manageError({ code: "ticket_not_found" });
 
-            if (userID !== String(ticket.userID) && ticket.scope === "space"){
-                //const userSpace = user.spaces?.find(x => x.id == String(ticket.spaceID));
-                //const hasPermisson = await hasRolePermission(userSpace?.role.toString() || "", ["administrator", "manage_tickets", "owner"]);
-                //if (!hasPermisson) return manageError({ code: "no_execution_permission" });
-            };
-
             if (userID !== String(ticket.userID) && ticket.scope === "system"){   
                 if (user.role !== "admin") return manageError({ code: "admin_access_denied" });
             };
 
             return ticket;
-        } catch (error) {
-            manageError({ code: "internal_error", error });
-        }
-    },
-    getSpaceTickets: async ({ manageError, ids, params }: ManageRequestBody) => {
-        try {
-            const { spaceID } =  params;
-
-            const { userID } = ids;
-            if (!userID || !spaceID) return manageError({ code: "invalid_params" });
-
-            const user = await hasUser({ _id: userID }, manageError);
-            if (!user) return;
-
-            //const userSpace = user.spaces?.find(x => x.id == spaceID);
-            //const hasPermisson = await hasRolePermission(userSpace?.role.toString() || "", ["administrator", "manage_tickets", "owner"]);
-            //if (!hasPermisson) return manageError({ code: "no_execution_permission" });
-
-            return await ticketModel.find({ spaceID, scope: "space" });
         } catch (error) {
             manageError({ code: "internal_error", error });
         }
@@ -125,15 +99,9 @@ const ticketResource = {
             const ticket = await ticketModel.findById(ticketID);
             if (!ticket) return manageError({ code: "ticket_not_found" });
 
-            let { content, spaceID } = data;
+            let { content } = data;
 
             content = stringService.filterBadwords(content || "");
-
-            if (userID !== String(ticket.userID) && ticket.scope === "space"){
-                //const userSpace = user.spaces?.find(x => x.id == spaceID);
-                //const hasPermisson = await hasRolePermission(userSpace?.role.toString() || "", ["administrator", "manage_tickets", "owner"]);
-                //if (!hasPermisson) return manageError({ code: "no_execution_permission" });
-            };
 
             if (userID !== String(ticket.userID) && ticket.scope === "system"){   
                 if (user.role !== "admin") return manageError({ code: "admin_access_denied" });
@@ -168,6 +136,10 @@ const ticketResource = {
             if (!ticket) return manageError({ code: "ticket_not_found" });
 
             let { status } = data;
+
+            if (userID !== String(ticket.userID) && ticket.scope === "system"){   
+                if (user.role !== "admin") return manageError({ code: "admin_access_denied" });
+            };
 
             return await ticketModel.findByIdAndUpdate(ticketID, { $set:{ status, lastUpdate: Date.now() } }, { new: true }); 
         } catch (error) {
