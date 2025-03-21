@@ -35,76 +35,53 @@ const baseResource = {
             manageError({ code: "internal_error", error });
         }
     },
-    getClass: async ({ manageError, params }: ManageRequestBody) => {
+    getBase: async ({ manageError, params }: ManageRequestBody) => {
         try {
-            const { classID } =  params;
-            if (!classID) return manageError({ code: "invalid_params" });
+            const { baseID } =  params;
+            if (!baseID) return manageError({ code: "invalid_params" });
 
-            const classe = await classModel.findById(classID);
-            if (!classe) return manageError({ code: "class_not_found" });
+            const base = await baseModel.findById(baseID);
+            if (!base) return manageError({ code: "base_not_found" });
 
-            return classe;
+            return base;
         } catch (error) {
             manageError({ code: "internal_error", error });
         }
     },
-    getClassUsers: async ({ manageError, params }: ManageRequestBody) => {
+    getUserBases: async ({ manageError, params }: ManageRequestBody) => {
         try {
-            const { classID } =  params;
-            if (!classID) return manageError({ code: "invalid_params" });
-
-            const classe = await classModel.findById(classID);
-            if (!classe) return manageError({ code: "class_not_found" });
-
-            return await userModel.find({ "classes.id": classID }).select("-password");
-        } catch (error) {
-            manageError({ code: "internal_error", error });
-        }
-    },
-    getSpaceClasses: async ({ manageError, params }: ManageRequestBody) => {
-        try {
-            const { spaceID } =  params;
-            if (!spaceID) return manageError({ code: "invalid_params" });
-
-            return await classModel.find({ spaceID });
-        } catch (error) {
-            manageError({ code: "internal_error", error });
-        }
-    },
-    updateClass: async ({ manageError, params, data, ids }: ManageRequestBody) => {
-        try {
-            const { classID } =  params;
-            if (!classID) return manageError({ code: "invalid_params" });
-
-            const classe = await classModel.findById(classID);
-            if (!classe) return manageError({ code: "class_not_found" });
-            const { userID } = ids;
+            const { userID } =  params;
+            if (!userID) return manageError({ code: "invalid_params" });
 
             const user = await hasUser({ _id: userID }, manageError);
             if (!user) return;
 
-            //if (!manageCheckUserHasPermissions(user, ["manage_classes", "manage_space"])) return;
+            return await baseModel.find({ "leader.id": userID });
+        } catch (error) {
+            manageError({ code: "internal_error", error });
+        }
+    },
+    updateBase: async ({ manageError, params, data }: ManageRequestBody) => {
+        try {
+            const { baseID } =  params;
+            if (!baseID) return manageError({ code: "invalid_params" });
 
-            const filteredClass = objectService.filterObject(data, ["createAt", "_id", "space"]);
+            const base = await baseModel.findById(baseID);
+            if (!base) return manageError({ code: "base_not_found" });
 
-            if (filteredClass.name){
-                filteredClass.name = stringService.normalizeString(filteredClass.name);
+            let filteredBase = objectService.filterObject(data, ["createAt", "_id"]);
 
-                const usersWithClasses = await userModel.find({ "classes.id": classID });
-                for (const classUser of usersWithClasses) {
-                    const index = classUser.classes.findIndex(classe => String(classe.id) === String(classID));
-                    if (index) {
-                        classUser.classes[index].name = filteredClass.name;
-                        await classUser.save();
-                    };
+            if (filteredBase.leader){
+                const leader = await hasUser({ _id: filteredBase.leader }, manageError);
+                if (!leader) return;
+
+                filteredBase.leader = {
+                    name: leader.name,
+                    id: leader._id,
                 };
             };
 
-            if (filteredClass.description){
-                filteredClass.description = stringService.normalizeString(filteredClass.description);
-            };
-
-            return await classModel.findByIdAndUpdate(classID, { $set:{ ...filteredClass, lastUpdate: Date.now() } }, { new: true });
+            return await baseModel.findByIdAndUpdate(baseID, { $set:{ ...filteredBase, lastUpdate: Date.now() } }, { new: true });
         } catch (error) {
             manageError({ code: "internal_error", error });
         }
