@@ -3,7 +3,6 @@ import stringService from "@utils/services/stringServices";
 import objectService from "@utils/services/objectServices";
 import { hasUser } from "@database/functions/user";
 import baseModel from "@database/model/base";
-import userModel from "@database/model/user";
 
 const baseResource = {
     createBase: async ({ manageError, data }: ManageRequestBody) => {
@@ -86,27 +85,15 @@ const baseResource = {
             manageError({ code: "internal_error", error });
         }
     },
-    deleteClass: async ({ manageError, params, ids }: ManageRequestBody) => {
+    deleteBase: async ({ manageError, params }: ManageRequestBody) => {
         try {
-            const { classID } =  params;
-            if (!classID) return manageError({ code: "invalid_params" });
+            const { baseID } =  params;
+            if (!baseID) return manageError({ code: "invalid_params" });
 
-            const classe = await classModel.findById(classID);
-            if (!classe) return manageError({ code: "class_not_found" });
-            const { userID } = ids;
+            const base = await baseModel.findById(baseID);
+            if (!base) return manageError({ code: "base_not_found" });
 
-            const user = await hasUser({ _id: userID }, manageError);
-            if (!user) return;
-
-            //if (!manageCheckUserHasPermissions(user, ["manage_space"])) return;
-
-            const usersWithClasses = await userModel.find({ "classes.id": classID });
-            for (const classUser of usersWithClasses) {
-                classUser.classes.pull({ id: classID });
-                await classUser.save();
-            };
-           
-            await classModel.findByIdAndDelete(classID);
+            await baseModel.findByIdAndDelete(baseID);
 
             return {
                 delete: true
