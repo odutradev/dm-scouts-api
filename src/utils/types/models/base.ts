@@ -1,19 +1,19 @@
 import { Types } from "mongoose";
 
-export interface ClassModelType {
+export interface baseModelType {
     name: string;
-    space: {
+    number: number;
+    branch: "wolfcub" | "scout" | "senior" | "pioneer";
+    leader: {
         id: Types.ObjectId;
         name: string;
     };
+    local: string;
     status: "active" | "inactive";
     createAt: Date;
     lastUpdate?: Date;
     description?: string;
     images?: {
         profile?: string;
-    };
-    metrics: {
-        users: number;
     };
 };

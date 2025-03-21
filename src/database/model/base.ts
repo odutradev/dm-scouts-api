@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 
-const classSchema = new mongoose.Schema({
+const baseSchema = new mongoose.Schema({
     name: String,
-    space: {
+    number: Number,
+    leader: {
         id:{
             type: mongoose.Schema.Types.ObjectId,
-            ref: "space"
+            ref: "user"
         },
         name: String
     }, 
@@ -14,6 +15,11 @@ const classSchema = new mongoose.Schema({
         default: "active",
         type: String,
     },
+    branch: {
+        enum: ["wolfcub", "scout", "senior", "pioneer"],
+        type: String,
+    },
+    local: String,
     createAt: {
         default: Date.now(),
         type: Date,
@@ -26,15 +32,9 @@ const classSchema = new mongoose.Schema({
     },
     images: {
         profile: String
-    },
-    metrics:{
-        users: {
-            type: Number,
-            default: 0,
-        }
-    },
+    }
 });
 
-const classModel = mongoose.model("class", classSchema);
+const classModel = mongoose.model("base", baseSchema);
 
 export default classModel;
