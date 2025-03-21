@@ -101,6 +101,13 @@ const baseResource = {
         } catch (error) {
             manageError({ code: "internal_error", error });
         }
+    },
+    getAllBases: async ({ manageError }: ManageRequestBody) => {
+        try {
+           return await baseModel.find().sort({ date: -1 });
+        } catch (error) {
+            manageError({ code: "internal_error", error });
+        }
     }
 };
 
