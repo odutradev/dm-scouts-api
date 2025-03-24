@@ -33,6 +33,7 @@ export type ResponseErrorsParams =
   | "ticket_not_found" 
   | "wallet_not_found" 
   | "base_not_found" 
+  | "team_not_found" 
   | "space_not_found" 
   | "internal_error" 
   | "invalid_params" 
@@ -115,6 +116,10 @@ export const ResponseErrors: Record<ResponseErrorsParams, ResponseError> = {
   },
   base_not_found: {
     message: "Base not found",
+    statusCode: 404,
+  },
+  team_not_found: {
+    message: "Team not found",
     statusCode: 404,
   },
   food_not_found: {
