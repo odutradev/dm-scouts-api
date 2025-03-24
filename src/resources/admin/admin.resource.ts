@@ -130,7 +130,20 @@ const adminResource = {
         } catch (error) {
             manageError({ code: "internal_error", error });
         }
-    }
+    },
+    getConfig: async ({ manageError }: ManageRequestBody) => {
+        try {
+            let config = await configModel.findOne();
+    
+            if (!config) {
+                config = await configModel.create({});
+            }
+
+            return config;
+        } catch (error) {
+            manageError({ code: "internal_error", error });
+        }
+    },
 };
 
 export default adminResource;
