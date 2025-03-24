@@ -3,6 +3,7 @@ import { hasUser } from "@database/functions/user";
 import scoreModel from "@database/model/score";
 import baseModel from "@database/model/base";
 import userModel from "@database/model/user";
+import teamModel from "@database/model/team";
 
 const scoreResource = {
     createScore: async ({ manageError, data }: ManageRequestBody) => {
@@ -76,6 +77,19 @@ const scoreResource = {
             if (!user) return;
 
             return await scoreModel.find({ "teamLeader.id": userID });
+        } catch (error) {
+            manageError({ code: "internal_error", error });
+        }
+    },
+    getTeamScores: async ({ manageError, params }: ManageRequestBody) => {
+        try {
+            const { teamID } =  params;
+            if (!teamID) return manageError({ code: "invalid_params" });
+
+            const team = await teamModel.findById(teamID);
+            if (!team) return manageError({ code: "team_not_found" });
+
+            return await scoreModel.find({ "team.id": teamID });
         } catch (error) {
             manageError({ code: "internal_error", error });
         }
