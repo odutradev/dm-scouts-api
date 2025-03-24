@@ -68,6 +68,25 @@ const scoreResource = {
             manageError({ code: "internal_error", error });
         }
     },
+    updateTeamLeaderConfirm: async ({ manageError, params, ids }: ManageRequestBody) => {
+        try {
+            const { scoreID } =  params;
+            const { userID } = ids;
+            if (!scoreID) return manageError({ code: "invalid_params" });
+
+            const score = await scoreModel.findById(scoreID);
+            if (!score) return manageError({ code: "score_not_found" });
+
+            const user = await hasUser({ _id: userID }, manageError);
+            if (!user) return;
+
+            if (user._id != score.teamLeader?.id) return manageError({ code: "no_execution_permission" });
+
+            return await scoreModel.findByIdAndUpdate(scoreID, { $set:{ teamLeaderConfirm: true, lastUpdate: Date.now() } }, { new: true });  
+        } catch (error) {
+            manageError({ code: "internal_error", error });
+        }
+    },
     getUserScores: async ({ manageError, params }: ManageRequestBody) => {
         try {
             const { userID } =  params;
