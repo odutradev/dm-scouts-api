@@ -94,6 +94,19 @@ const scoreResource = {
             manageError({ code: "internal_error", error });
         }
     },
+    getBaseScores: async ({ manageError, params }: ManageRequestBody) => {
+        try {
+            const { baseID } =  params;
+            if (!baseID) return manageError({ code: "invalid_params" });
+
+            const base = await baseModel.findById(baseID);
+            if (!base) return manageError({ code: "base_not_found" });
+
+            return await scoreModel.find({ "base.id": baseID });
+        } catch (error) {
+            manageError({ code: "internal_error", error });
+        }
+    },
 };
 
 export default scoreResource;
