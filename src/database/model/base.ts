@@ -40,6 +40,6 @@ const baseSchema = new mongoose.Schema({
     }
 });
 
-const classModel = mongoose.model("base", baseSchema);
+const baseModel = mongoose.model("base", baseSchema);
 
-export default classModel;
+export default baseModel;
