@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const configSchema = new mongoose.Schema({
-    updatedAt: {
+    lastUpdate: {
         type: Date,
         default: Date.now
     },

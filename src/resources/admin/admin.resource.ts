@@ -6,6 +6,7 @@ import stringService from "@utils/services/stringServices";
 import objectService from "@utils/services/objectServices";
 import { UserModelType } from "@utils/types/models/user";
 import userModel from "@database/model/user";
+import configModel from "@database/model/config";
 
 const adminResource = {
     createUser: async ({ data, manageError }: ManageRequestBody) => {
@@ -107,6 +108,25 @@ const adminResource = {
     getAllUsers: async ({ manageError }: ManageRequestBody) => {
         try {
            return await userModel.find().sort({ date: -1 }).select('-password');
+        } catch (error) {
+            manageError({ code: "internal_error", error });
+        }
+    },
+    updateConfig: async ({ data, manageError }: ManageRequestBody) => {
+        try {
+            let config = await configModel.findOne();
+    
+            if (!config) {
+                config = await configModel.create({});
+            }
+    
+            config = await configModel.findOneAndUpdate(
+                {},
+                { $set: { ...data, lastUpdate: Date.now() } },
+                { new: true }
+            );
+    
+            return config;
         } catch (error) {
             manageError({ code: "internal_error", error });
         }
