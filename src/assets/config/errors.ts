@@ -33,6 +33,7 @@ export type ResponseErrorsParams =
   | "ticket_not_found" 
   | "wallet_not_found" 
   | "base_not_found" 
+  | "score_not_found" 
   | "team_not_found" 
   | "space_not_found" 
   | "internal_error" 
@@ -91,6 +92,10 @@ export const ResponseErrors: Record<ResponseErrorsParams, ResponseError> = {
     statusCode: 404,
   },
   category_not_found: {
+    message: "Category not found",
+    statusCode: 404,
+  },
+  score_not_found: {
     message: "Category not found",
     statusCode: 404,
   },
