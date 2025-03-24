@@ -19,7 +19,7 @@ const baseSchema = new mongoose.Schema({
         enum: ["wolfcub", "scout", "senior", "pioneer", "all"],
         type: String,
     },
-    location: String,
+    local: String,
     createAt: {
         default: Date.now(),
         type: Date,
