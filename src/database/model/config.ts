@@ -30,6 +30,10 @@ const configSchema = new mongoose.Schema({
         type: String,
         enum: ["GJE", "JDC"],
         default: "GJE"
+    },
+    initialScore: {
+        type: Number,
+        default: 100
     }
 });
 
