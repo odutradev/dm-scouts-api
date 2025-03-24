@@ -4,22 +4,22 @@ const baseSchema = new mongoose.Schema({
     name: String,
     number: Number,
     leader: {
-        id:{
+        id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "user"
         },
         name: String
-    }, 
+    },
     status: {
         enum: ["active", "inactive"],
         default: "active",
         type: String,
     },
     branch: {
-        enum: ["wolfcub", "scout", "senior", "pioneer"],
+        enum: ["wolfcub", "scout", "senior", "pioneer", "all"],
         type: String,
     },
-    local: String,
+    location: String,
     createAt: {
         default: Date.now(),
         type: Date,
@@ -32,6 +32,11 @@ const baseSchema = new mongoose.Schema({
     },
     images: {
         profile: String
+    },
+    type: {
+        enum: ["fixed", "mobile", "secret", "special"],
+        type: String,
+        default: "fixed"
     }
 });
 

@@ -7,7 +7,7 @@ import baseModel from "@database/model/base";
 const baseResource = {
     createBase: async ({ manageError, data }: ManageRequestBody) => {
         try {
-            let { name, description, leaderID, branch, number, local } = data;
+            let { name, description, leaderID, branch, number, local, type } = data;
             if (!name) return manageError({ code: "invalid_data" });
 
             if (description) description = stringService.filterBadwords(stringService.normalizeString(description));
@@ -18,6 +18,7 @@ const baseResource = {
 
             const newBase = new baseModel({
                 lastUpdate: new Date(Date.now()),
+                type,
                 description,
                 branch,
                 name,
