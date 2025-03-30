@@ -7,9 +7,9 @@ const ticketsRouter = Router();
 
 ticketsRouter.patch("/:ticketID/messages/add", manageRequest(ticketsResource.addTicketMessage));
 ticketsRouter.patch("/:ticketID/update", manageRequest(ticketsResource.updateTicket));
-ticketsRouter.get("/system", manageRequest(ticketsResource.getSystemTickets));
+ticketsRouter.get("/find/system", manageRequest(ticketsResource.getSystemTickets));
 ticketsRouter.get("/:ticketID", manageRequest(ticketsResource.getTicket));
 ticketsRouter.post("/create", manageRequest(ticketsResource.createTicket));
-ticketsRouter.get("/user", manageRequest(ticketsResource.getUserTickets));
+ticketsRouter.get("/find/user/", manageRequest(ticketsResource.getUserTickets));
 
 export default ticketsRouter;
