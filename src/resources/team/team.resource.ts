@@ -3,6 +3,7 @@ import stringService from "@utils/services/stringServices";
 import objectService from "@utils/services/objectServices";
 import { hasUser } from "@database/functions/user";
 import teamModel from "@database/model/team";
+import userModel from "@database/model/user";
 
 const teamResource = {
     createTeam: async ({ manageError, data }: ManageRequestBody) => {
@@ -13,21 +14,29 @@ const teamResource = {
             if (description) description = stringService.filterBadwords(stringService.normalizeString(description));
             name = stringService.normalizeString(name);
 
-            const leader = await hasUser({ _id: leaderID }, manageError);
-            if (!leader) return;
+            const leader = await userModel.findById(leaderID);
+
+            const extra: any = {
+                lastUpdate: new Date(Date.now()),
+            };
+
+            if (leader){
+                extra.leader = {
+                    name: leader.name,
+                    id: leader._id,
+                };
+
+                if (leader.group) extra.group = leader.group;
+            };
 
             const newTeam = new teamModel({
-                lastUpdate: new Date(Date.now()),
+                ...extra,
                 description,
                 branch,
                 name,
                 group,
                 local,
                 number,
-                leader: {
-                    name: leader.name,
-                    id: leader._id,
-                },
             });
 
             return await newTeam.save();
