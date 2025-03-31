@@ -31,6 +31,7 @@ const scoreResource = {
             };
 
             const newScore = new scoreModel({
+                ...extra,
                 baseLeader: {
                     name: baseLeader.name,
                     id: baseLeader._id,
@@ -80,7 +81,7 @@ const scoreResource = {
             const user = await hasUser({ _id: userID }, manageError);
             if (!user) return;
 
-            if (user._id != score.teamLeader?.id) return manageError({ code: "no_execution_permission" });
+            if (String(user._id) !== String(score.teamLeader?.id)) return manageError({ code: "no_execution_permission" });
 
             return await scoreModel.findByIdAndUpdate(scoreID, { $set:{ teamLeaderConfirm: true, lastUpdate: Date.now() } }, { new: true });  
         } catch (error) {

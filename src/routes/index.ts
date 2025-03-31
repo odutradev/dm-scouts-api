@@ -1,8 +1,9 @@
 import { Router } from "express";
 
+import ticketsRouter from "./resources/tickets.router";
 import controlAccess from "@middlewares/controlAccess";
 import basesRouter from "./resources/bases.router";
-import ticketsRouter from "./resources/tickets.router";
+import scoresRouter from "./resources/score.router";
 import usersRouter from "./resources/users.router";
 import adminRouter from "./resources/admin.router";
 import teamsRouter from "./resources/team.router";
@@ -21,6 +22,7 @@ router.get("/validate/control-access", controlAccess, (req, res) => {
 
 router.use("/admin", [controlAccess, auth, hasAdmin],  adminRouter);
 router.use("/tickets", [controlAccess, auth],  ticketsRouter);
+router.use("/scores", [controlAccess, auth],  scoresRouter);
 router.use("/bases", [controlAccess, auth],  basesRouter);
 router.use("/teams", [controlAccess, auth],  teamsRouter);
 router.use("/users", [controlAccess],  usersRouter);
