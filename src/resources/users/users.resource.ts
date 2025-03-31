@@ -6,7 +6,8 @@ import stringService from "@utils/services/stringServices";
 import objectService from "@utils/services/objectServices";
 import { UserModelType } from "@utils/types/models/user";
 import { hasUser } from "@database/functions/user";
-import userModel from "@database/model/user";
+import configModel from "@database/model/config";
+import userModel from "@database/model/user";   
 
 const usersResource = {
     signUp: async ({ data, manageError }: ManageRequestBody) => {
@@ -82,6 +83,19 @@ const usersResource = {
             };
 
             return await userModel.findByIdAndUpdate(userID, { $set:{ ...filteredUpdatedUser, lastUpdate: Date.now() } }, { new: true }).select("-password");
+        } catch (error) {
+            manageError({ code: "internal_error", error });
+        }
+    },
+    getConfig: async ({ manageError }: ManageRequestBody) => {
+        try {
+            let config = await configModel.findOne();
+    
+            if (!config) {
+                config = await configModel.create({});
+            }
+
+            return config;
         } catch (error) {
             manageError({ code: "internal_error", error });
         }

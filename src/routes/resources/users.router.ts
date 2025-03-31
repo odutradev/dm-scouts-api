@@ -12,4 +12,6 @@ usersRouter.post("/auth/signin", manageRequest(usersResource.signIn));
 
 usersRouter.patch("/profile/update", [auth], manageRequest(usersResource.updateProfile));
 
+usersRouter.get("/config", manageRequest(usersResource.getConfig));
+
 export default usersRouter;
