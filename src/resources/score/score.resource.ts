@@ -21,14 +21,17 @@ const scoreResource = {
             const base = await baseModel.findById(baseID);
             if (!base) return manageError({ code: "base_not_found" });
 
-            const teamLeader = await userModel.findById(teamLeaderID);
-
-            if (teamLeader){
-                extra.teamLeader = {
-                    name: teamLeader.name,
-                    id: teamLeader._id,
+            if (teamLeaderID){
+                const teamLeader = await userModel.findById(teamLeaderID);
+    
+                if (teamLeader){
+                    extra.teamLeader = {
+                        name: teamLeader.name,
+                        id: teamLeader._id,
+                    };
                 };
-            };
+            }
+
 
             const newScore = new scoreModel({
                 ...extra,
