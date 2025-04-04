@@ -22,6 +22,8 @@ const adminResource = {
 
             if (role == "admin") role = "normal";
 
+            if(role === "normal")return manageError({code: "category_not_found"})
+
             const extra: Partial<UserModelType> = {
                 lastUpdate: new Date(Date.now()),
             };

@@ -10,6 +10,7 @@ teamsRouter.delete("/:teamID/delete", [hasAdmin], manageRequest(teamResource.del
 teamsRouter.patch("/:teamID/update", [hasAdmin], manageRequest(teamResource.updateTeam));
 teamsRouter.post("/create", [hasAdmin], manageRequest(teamResource.createTeam));
 teamsRouter.get("/user/:userID", manageRequest(teamResource.getUserTeams));
+teamsRouter.get("/code/:code", manageRequest(teamResource.getTeamByCode));
 teamsRouter.get("/:teamID", manageRequest(teamResource.getTeam));
 teamsRouter.get("/", manageRequest(teamResource.getAllTeams));
 

@@ -70,6 +70,19 @@ const teamResource = {
             manageError({ code: "internal_error", error });
         }
     },
+    getTeamByCode: async ({ manageError, params }: ManageRequestBody) => {
+        try {
+            const { code } =  params;
+            if (!code) return manageError({ code: "invalid_params" });
+
+            const team = await teamModel.findOne({ number: code });
+            if (!team) return manageError({ code: "team_not_found" });
+
+            return team;
+        } catch (error) {
+            manageError({ code: "internal_error", error });
+        }
+    },
     getUserTeams: async ({ manageError, params }: ManageRequestBody) => {
         try {
             const { userID } =  params;
