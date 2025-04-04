@@ -137,6 +137,16 @@ const scoreResource = {
             manageError({ code: "internal_error", error });
         }
     },
+    getBranchScores: async ({ manageError, params }: ManageRequestBody) => {
+        try {
+            const { branch } =  params;
+            if (!branch) return manageError({ code: "invalid_params" });
+
+            return await scoreModel.find({ branch });
+        } catch (error) {
+            manageError({ code: "internal_error", error });
+        }
+    },
 };
 
 export default scoreResource;
