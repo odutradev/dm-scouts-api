@@ -8,12 +8,12 @@ const baseResource = {
     createBase: async ({ manageError, data }: ManageRequestBody) => {
         try {
             let { name, description, leaderID, branch, number, local, type } = data;
-            if (!name) return manageError({ code: "invalid_data" });
+            if (!name || !leaderID) return manageError({ code: "invalid_data" });
 
             if (description) description = stringService.filterBadwords(stringService.normalizeString(description));
             name = stringService.normalizeString(name);
 
-            const leader = await hasUser({ _id: leaderID }, manageError);
+            const leader = await hasUser({ id: leaderID }, manageError);
             if (!leader) return;
 
             const newBase = new baseModel({

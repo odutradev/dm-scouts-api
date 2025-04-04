@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const teamSchema = new mongoose.Schema({
     name: String,
     group: Number,
+    number: Number,
     leader: {
         id:{
             type: mongoose.Schema.Types.ObjectId,

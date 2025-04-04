@@ -17,6 +17,7 @@ const baseSchema = new mongoose.Schema({
     },
     branch: {
         enum: ["wolfcub", "scout", "senior", "pioneer", "all"],
+        default: "all",
         type: String,
     },
     local: String,

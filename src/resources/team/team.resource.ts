@@ -6,44 +6,57 @@ import teamModel from "@database/model/team";
 import userModel from "@database/model/user";
 
 const teamResource = {
+      
     createTeam: async ({ manageError, data }: ManageRequestBody) => {
         try {
-            let { name, description, leaderID, branch, number, group, local } = data;
-            if (!name) return manageError({ code: "invalid_data" });
-
-            if (description) description = stringService.filterBadwords(stringService.normalizeString(description));
-            name = stringService.normalizeString(name);
-
-            const leader = await userModel.findById(leaderID);
-
-            const extra: any = {
-                lastUpdate: new Date(Date.now()),
+          let { name, description, leaderID, branch, group, local } = data;
+          if (!name) return manageError({ code: "invalid_data" });
+      
+          if (description) {
+            description = stringService.filterBadwords(stringService.normalizeString(description));
+          }
+          name = stringService.normalizeString(name);
+      
+          const leader = await userModel.findOne({ id: leaderID });
+          const extra: any = {
+            lastUpdate: new Date(),
+          };
+      
+          if (leader) {
+            extra.leader = {
+              name: leader.name,
+              id: leader._id,
             };
-
-            if (leader){
-                extra.leader = {
-                    name: leader.name,
-                    id: leader._id,
-                };
-
-                if (leader.group) extra.group = leader.group;
-            };
-
-            const newTeam = new teamModel({
-                ...extra,
-                description,
-                branch,
-                name,
-                group,
-                local,
-                number,
-            });
-
-            return await newTeam.save();
+            if (leader.group) extra.group = leader.group;
+          }
+      
+          async function generateUniqueNumber() {
+            let number;
+            while (true) {
+              number = Math.floor(Math.random() * 9000) + 1000;
+              const exists = await teamModel.findOne({ number });
+              if (!exists) break;
+            }
+            return number;
+          }
+      
+          const uniqueNumber = await generateUniqueNumber();
+      
+          const newTeam = new teamModel({
+            ...extra,
+            description,
+            branch,
+            name,
+            group,
+            local,
+            number: uniqueNumber,
+          });
+      
+          return await newTeam.save();
         } catch (error) {
-            manageError({ code: "internal_error", error });
+          manageError({ code: "internal_error", error });
         }
-    },
+      },    
     getTeam: async ({ manageError, params }: ManageRequestBody) => {
         try {
             const { teamID } =  params;
@@ -78,7 +91,7 @@ const teamResource = {
             const team = await teamModel.findById(teamID);
             if (!team) return manageError({ code: "team_not_found" });
 
-            let filteredTeam = objectService.filterObject(data, ["createAt", "_id"]);
+            let filteredTeam = objectService.filterObject(data, ["createAt", "_id", "number"]);
 
             if (filteredTeam.leader){
                 const leader = await hasUser({ _id: filteredTeam.leader }, manageError);
