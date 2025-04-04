@@ -8,8 +8,8 @@ import teamModel from "@database/model/team";
 const scoreResource = {
     createScore: async ({ manageError, data }: ManageRequestBody) => {
         try {
-            let { baseLeaderID, teamLeaderID, baseID, score, extraScore, extraScoreReason, observations, inputIn, outputIn } = data;
-            if (!baseLeaderID || !score || !baseID) return manageError({ code: "invalid_data" });
+            let { baseLeaderID, teamLeaderID, baseID, teamID, score, extraScore, extraScoreReason, observations, inputIn, outputIn } = data;
+            if (!baseLeaderID || !score || !baseID || !teamID) return manageError({ code: "invalid_data" });
 
             const extra: any = {
                 lastUpdate: new Date(Date.now()),
@@ -20,6 +20,9 @@ const scoreResource = {
 
             const base = await baseModel.findById(baseID);
             if (!base) return manageError({ code: "base_not_found" });
+
+            const team = await teamModel.findById(teamID);
+            if (!team) return manageError({ code: "team_not_found" });
 
             if (teamLeaderID){
                 const teamLeader = await userModel.findById(teamLeaderID);
@@ -42,6 +45,10 @@ const scoreResource = {
                 base: {
                     name: base.name,
                     id: base._id
+                },
+                team: {
+                    name: team.name,
+                    id: team._id
                 },
                 branch: base.branch,
                 local: base.local,
