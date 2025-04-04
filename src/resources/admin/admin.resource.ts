@@ -26,7 +26,7 @@ const adminResource = {
                 lastUpdate: new Date(Date.now()),
             };
             
-            const createdUser = new userModel({ id, name, group, ...extra });
+            const createdUser = new userModel({ id, name, group, role, ...extra });
             await createdUser.save();
 
             return createdUser;
